@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat UI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        #chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow-y: scroll;
+            max-height: calc(100vh - 20px);
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            word-wrap: break-word;
+            max-width: 70%;
+        }
+
+        .user-message {
+            background-color: #e6f7ff;
+            align-self: flex-end;
+        }
+
+        .response-message {
+            background-color: #f0f0f0;
+            align-self: flex-start;
+        }
+
+        #input-container {
+            display: flex;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        #send-button {
+            margin-left: 5px;
+            padding: 8px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+
+        #send-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container"></div>
+    <div id="input-container">
+        <input type="text" id="message-input" placeholder="Type your question...">
+        <button id="send-button" onclick="sendQuestion()">Send</button>
+    </div>
+
+    <script>
+        function sendQuestion() {
+            var questionInput = document.getElementById('message-input');
+            var question = questionInput.value;
+
+            if (question.trim() === '') {
+                return;
+            }
+
+            var apiUrl = 'https://attendanceapi-i0pn.onrender.com/chatbot';
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayMessage(data.answer, 'response');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+            displayMessage(question, 'user');
+            questionInput.value = '';
+        }
+
+        function displayMessage(message, sender) {
+            var chatContainer = document.getElementById('chat-container');
+            var messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + (sender === 'user' ? 'user-message' : 'response-message');
+            messageDiv.textContent = message;
+            chatContainer.appendChild(messageDiv);
+
+            // Optional: Add a fade-in animation to the new message
+            setTimeout(() => {
+                messageDiv.style.opacity = 1;
+            }, 100);
+
+            // Scroll to the bottom of the chat container
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>
