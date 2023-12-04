@@ -28,9 +28,7 @@ const generateResponse = (chatElement) => {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-            "question":: userMessage}],
-        })
+        body: JSON.stringify({"question": userMessage,})
     }
 
     // Send POST request to API, get response and set the reponse as paragraph text
