@@ -19,7 +19,7 @@ const createChatLi = (message, className) => {
 }
 
 const generateResponse = (chatElement) => {
-    const API_URL = "https://api.openai.com/v1/chat/completions";
+    const API_URL = "https://attendanceapi-i0pn.onrender.com/chatbot";
     const messageElement = chatElement.querySelector("p");
 
     // Define the properties and message for the API request
@@ -27,11 +27,9 @@ const generateResponse = (chatElement) => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${API_KEY}`
         },
         body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{role: "user", content: userMessage}],
+            "question":: userMessage}],
         })
     }
 
